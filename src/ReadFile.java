@@ -28,7 +28,7 @@ public class ReadFile {
 			while (true) {
 				int[] s = new int[3];
 				// ��ȡÿһ�еĵ�Ԫ��
-				if ("".equals(cell1.getContents()) == true) // �����ȡ������Ϊ��
+				if ("".equals(cell1.getContents())) // �����ȡ������Ϊ��
 					break;
 				cell1 = sheet.getCell(0, i);// ���У��У�
 				cell2 = sheet.getCell(1, i);
@@ -40,7 +40,7 @@ public class ReadFile {
 				i++;
 			}
 			book.close();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 		return list;
 	}
@@ -51,38 +51,36 @@ public class ReadFile {
 		List<int[]> list = readFile(Cst.edge_fileName);
 		Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
 		List<Integer> nodes = null;
-		for (int i = 0; i < list.size(); i++) {
-			if(map.get(list.get(i)[1])==null){//not exist in map yet
-				nodes = new ArrayList<Integer>();
-				nodes.add(list.get(i)[2]);
-				map.put(list.get(i)[1], nodes);
-			}else{//already exist in map
-				nodes = map.get(list.get(i)[1]);
-				nodes.add(list.get(i)[2]);
-			}
-		}
+        for (int[] item : list) {
+            if (map.get(item[1]) == null) {//not exist in map yet
+                nodes = new ArrayList<Integer>();
+                nodes.add(item[2]);
+                map.put(item[1], nodes);
+            } else {//already exist in map
+                nodes = map.get(item[1]);
+                nodes.add(item[2]);
+            }
+        }
 		//take the end node as the start node, then re-check
-		for (int i = 0; i < list.size(); i++) {
-			if(map.get(list.get(i)[2])==null){//not exist in map yet
-				nodes = new ArrayList<Integer>();
-				nodes.add(list.get(i)[1]);
-				map.put(list.get(i)[2], nodes);
-			}else{//already exist in map
-				nodes = map.get(list.get(i)[2]);
-				nodes.add(list.get(i)[1]);
-			}
-		}
+        for (int[] ints : list) {
+            if (map.get(ints[2]) == null) {//not exist in map yet
+                nodes = new ArrayList<Integer>();
+                nodes.add(ints[1]);
+                map.put(ints[2], nodes);
+            } else {//already exist in map
+                nodes = map.get(ints[2]);
+                nodes.add(ints[1]);
+            }
+        }
 		
 		
 		for(Entry<Integer, List<Integer>> entry : map.entrySet()) {
 			Integer key = entry.getKey();
-			int count = 0;//count the number of values for each key
-			List<Integer> values = entry.getValue();
+            List<Integer> values = entry.getValue();
 			System.out.println("Key = " + key);
-			for(int k=0; k<values.size(); k++){
-				System.out.print(values.get(k)+", ");
-				count++;
-				}
+            for (Integer value : values) {
+                System.out.print(value + ", ");
+            }
 			System.out.println();
 //			System.out.println("the number of values = "+count);
 			}
